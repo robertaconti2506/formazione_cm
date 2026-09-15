@@ -1,0 +1,17 @@
+---
+- name: Track_3
+  hosts: rocky
+  gather_facts: false
+
+  pre_tasks:
+    - name: Generate SSH key pair
+      community.crypto.openssh_keypair:
+        path: /home/vagrant/.ssh/id-genericuser
+        type: ed25519
+        state: present
+
+  roles:
+    - { role: step1, tags: ["step1"] }
+    - { role: step2, tags: ["step2"] }
+    - { role: step3, tags: ["step3"] }
+    - { role: step5, tags: ["step5"] }

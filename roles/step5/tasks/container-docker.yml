@@ -1,0 +1,50 @@
+---
+- name: Create build directory
+  ansible.builtin.file:
+    path: /tmp/step5-build/ssh
+    state: directory
+    mode: '0755'
+
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /tmp/step5-build/Dockerfile
+    mode: '0644'
+
+- name: Copy Docker entrypoint
+  ansible.builtin.copy:
+    src: docker-entrypoint.sh
+    dest: /tmp/step5-build/docker-entrypoint.sh
+    mode: '0755'
+
+- name: Copy SSH public key
+  ansible.builtin.copy:
+    remote_src: true
+    src: /home/vagrant/.ssh/id-genericuser.pub
+    dest: /tmp/step5-build/id-genericuser.pub
+    mode: '0644'
+
+- name: Build Step5 Docker image
+  community.docker.docker_image:
+    name: "{{ container_image }}" 
+    tag: "{{ container_tag }}"
+    source: build 
+    build: 
+      path: /tmp/step5-build
+
+- name: Create Step5 Docker network
+  community.docker.docker_network:
+    name: "{{ container_network }}"
+    state: present
+      
+- name: Run Step5 container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}:{{ container_tag }}"
+    state: started
+    restart_policy: unless-stopped
+    privileged: true
+    networks:
+      - name: "{{ container_network }}"
+    published_ports:
+      - "{{ container_host_port }}:{{ container_container_port }}"

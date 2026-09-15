@@ -1,0 +1,12 @@
+---
+- name: Runtime
+  ansible.builtin.include_tasks: runtime.yml
+
+- name: Registry
+  ansible.builtin.include_tasks: registry.yml
+ 
+- name: Firewall
+  ansible.builtin.include_tasks: firewall.yml
+
+- name: Containers Docker/Podman
+  ansible.builtin.include_tasks: containers-dp.yml

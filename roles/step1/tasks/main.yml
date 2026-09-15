@@ -1,0 +1,6 @@
+---
+- name: Check Podman
+  ansible.builtin.include_tasks: podman.yml
+
+- name: Registry 
+  ansible.builtin.include_tasks: registry_podman.yml

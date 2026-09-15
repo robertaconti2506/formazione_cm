@@ -1,0 +1,151 @@
+---
+- name: Create build directory
+  ansible.builtin.file:
+    path: /tmp/step3
+    state: directory
+    mode: '0755'
+
+- name: Copy Rocky Containerfile
+  ansible.builtin.copy:
+    src: roles/step3/files/rocky/Containerfile
+    dest: /tmp/step3/Containerfile-rocky
+
+- name: Copy Ubuntu Containerfile
+  ansible.builtin.copy:
+    src: roles/step3/files/ubuntu/Containerfile
+    dest: /tmp/step3/Containerfile-ubuntu
+
+- name: Copy SSH public key
+  ansible.builtin.copy:
+    remote_src: true
+    src: /home/vagrant/.ssh/id-genericuser.pub
+    dest: /tmp/step3/id-key-genericuser.pub
+
+- name: Build Rocky image with Podman
+  containers.podman.podman_image:
+    name: "{{ rocky_container_name }}"
+    path: /tmp/step3
+    build:
+      file: Containerfile-rocky
+  when: podman_installed
+
+- name: Build Rocky image with Docker
+  community.docker.docker_image:
+    name: "{{ rocky_container_name }}"
+    source: build
+    build:
+      path: /tmp/step3
+      dockerfile: Containerfile-rocky
+  when: docker_installed
+
+- name: Build Ubuntu image with Podman
+  containers.podman.podman_image:
+    name: "{{ ubuntu_container_name }}"
+    path: /tmp/step3
+    build:
+      file: Containerfile-ubuntu
+  when: podman_installed
+
+- name: Build Ubuntu image with Docker
+  community.docker.docker_image:
+    name: "{{ ubuntu_container_name }}"
+    source: build
+    build:
+      path: /tmp/step3
+      dockerfile: Containerfile-ubuntu
+  when: docker_installed
+
+- name: Tag and push Rocky image with Podman
+  containers.podman.podman_image:
+    name: "{{ rocky_container_name }}"
+    tag: "{{ image_tag }}"
+    push: true
+    validate_certs: false
+    push_args:
+      dest: "{{ registry_host }}:{{ registry_port_podman }}/{{ rocky_container_name }}"
+  when: podman_installed
+
+- name: Tag and push Rocky image with Docker
+  community.docker.docker_image:
+    name: "{{ rocky_container_name }}"
+    repository: "{{ registry_host }}:{{ registry_port_docker }}/{{ rocky_container_name }}"
+    push: true
+    source: local
+  when: docker_installed
+
+- name: Tag and push Ubuntu image with Podman
+  containers.podman.podman_image:
+    name: "{{ ubuntu_container_name }}"
+    tag: "{{ image_tag }}"
+    push: true
+    validate_certs: false
+    push_args:
+      dest: "{{ registry_host }}:{{ registry_port_podman }}/{{ ubuntu_container_name }}"
+  when: podman_installed
+
+- name: Tag and push Ubuntu image with Docker
+  community.docker.docker_image:
+    name: "{{ ubuntu_container_name }}"
+    repository: "{{ registry_host }}:{{ registry_port_docker }}/{{ ubuntu_container_name }}"
+    push: true
+    source: local
+  when: docker_installed
+
+- name: Create container network (Podman)
+  containers.podman.podman_network:
+    name: "{{ container_network_name }}"
+    state: present
+  when: podman_installed
+
+- name: Create container network (Docker)
+  community.docker.docker_network:
+    name: "{{ container_network_name }}"
+    state: present
+  when: docker_installed
+    
+- name: Run Rocky container with Podman
+  containers.podman.podman_container:
+    name: "{{ rocky_container_name }}"
+    image: "{{ rocky_container_name }}"
+    state: started
+    restart_policy: always
+    network:
+      - "{{ container_network_name }}"
+    publish:
+      - "{{ rocky_podman_host_port }}:22"
+  when: podman_installed
+
+- name: Run Rocky container with Docker
+  community.docker.docker_container: 
+    name: "{{ rocky_container_name }}"
+    image: "{{ rocky_container_name }}"
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ container_network_name }}"
+    published_ports:
+      - "{{ rocky_docker_host_port }}:22"
+  when: docker_installed
+
+- name: Run Ubuntu container with Podman
+  containers.podman.podman_container:
+    name: "{{ ubuntu_container_name }}"
+    image: "{{ ubuntu_container_name }}"
+    state: started
+    restart_policy: always
+    network: "{{ container_network_name }}"
+    publish:
+      - "{{ ubuntu_podman_host_port }}:22"
+  when: podman_installed
+
+- name: Run Ubuntu container with Docker
+  community.docker.docker_container:
+    name:  "{{ ubuntu_container_name }}"
+    image: "{{ ubuntu_container_name }}"
+    state: started
+    restart_policy: always
+    networks: 
+      - name: "{{ container_network_name }}"
+    published_ports:
+      - "{{ ubuntu_docker_host_port }}:22"
+  when: docker_installed

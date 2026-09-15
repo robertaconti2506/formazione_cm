@@ -1,0 +1,28 @@
+---
+- name: Pull the registry image 
+  community.docker.docker_image:
+    name: docker.io/library/registry:2
+    source: pull
+
+- name: Create persistent volume for the registry 
+  community.docker.docker_volume:
+    name: registry_data
+    state: present
+
+- name: Run a Registry container with Docker
+  community.docker.docker_container: 
+    name: registry_d
+    image: docker.io/library/registry:2
+    state: started
+    published_ports: 
+      - "5002:5000"
+    volumes:
+      - "registry_data:/var/lib/registry"
+
+- name: Allow Registry port
+  become: true 
+  ansible.posix.firewalld:
+   port: 5002/tcp
+   permanent: true
+   state: enabled
+   immediate: true

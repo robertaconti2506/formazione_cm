@@ -1,0 +1,11 @@
+container_name: step5-docker
+container_image: step5-docker
+container_tag: latest
+
+container_host_port: 2227
+container_container_port: 22
+
+container_network: step5-network
+
+registry_host: 192.168.56.112
+registry_port: 5002

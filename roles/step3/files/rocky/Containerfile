@@ -1,0 +1,21 @@
+FROM rockylinux:9
+
+RUN dnf install -y openssh-server sudo && mkdir -p /var/run/sshd && useradd -m genericuser && \
+    echo "genericuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/genericuser && chmod 440 /etc/sudoers.d/genericuser
+
+RUN ssh-keygen -A
+
+RUN sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config && \
+    sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    echo 'AllowUsers genericuser' >> /etc/ssh/sshd_config
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
+
+RUN mkdir -p /home/genericuser/.ssh && chmod 700 /home/genericuser/.ssh
+
+COPY id-key-genericuser.pub /home/genericuser/.ssh/authorized_keys
+
+RUN chmod 600 /home/genericuser/.ssh/authorized_keys && chown -R genericuser:genericuser /home/genericuser/.ssh

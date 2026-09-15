@@ -1,0 +1,9 @@
+---
+- name: Docker
+  ansible.builtin.include_tasks: docker.yml
+
+- name: Registry Docker
+  ansible.builtin.include_tasks: registry-docker.yml
+
+- name: Container Docker
+  ansible.builtin.include_tasks: container-docker.yml

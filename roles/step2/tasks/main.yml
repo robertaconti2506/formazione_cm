@@ -1,0 +1,9 @@
+---
+- name: Podman
+  ansible.builtin.include_tasks: podman.yml
+
+- name: Firewall 
+  ansible.builtin.include_tasks: firewall.yml
+
+- name: Containers
+  ansible.builtin.include_tasks: containers.yml

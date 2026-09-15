@@ -1,0 +1,64 @@
+---
+- name: Aggiorna la cache dei pacchetti DNF
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+
+- name: Installa i pacchetti necessari
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - dnf-plugins-core
+      - python3-requests
+    state: present
+
+- name: Aggiungi il repository Docker
+  become: true
+  ansible.builtin.command:
+    cmd: dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Installazione dei pacchetti Docker
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+
+- name: Insecure Registry
+  become: true
+  ansible.builtin.template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Docker
+
+- name: Avvia Docker service
+  become: true
+  ansible.builtin.service:
+    name: docker
+    state: started
+
+- name: Verifica lo stato di Docker service
+  ansible.builtin.service_facts:
+
+- name: Aggiungi utente vagrant al gruppo docker
+  ansible.builtin.user:
+    name: vagrant
+    groups: docker
+    append: true
+
+- name: Mostra Docker status
+  ansible.builtin.debug:
+    msg: "Docker è attivo sul nodo"
+  when: ansible_facts.services['docker.service'].state == 'running'
+
+- name: Errore se Docker non è attivo
+  ansible.builtin.fail:
+    msg: "Docker non è partito correttamente"
+  when: ansible_facts.services['docker.service'].state != 'running'
