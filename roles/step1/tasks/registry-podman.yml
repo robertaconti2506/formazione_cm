@@ -9,6 +9,8 @@
     name: registry
     image: docker.io/library/registry:2
     publish: "5000:5000"
+    volume:
+      - registry_data:/var/lib/registry
 
 - name: Allow Registry port
   become: true

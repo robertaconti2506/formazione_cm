@@ -12,6 +12,11 @@
     state: present
   when: podman_check.rc != 0
 
+- name: Create registry volume
+  containers.podman.podman_volume:
+    name: registry_data 
+    state: present
+
 - name: Show Podman Status
   ansible.builtin.debug:
     msg: "{{ podman_check.stdout if podman_check.rc == 0 else 'Podman not installed' }}"

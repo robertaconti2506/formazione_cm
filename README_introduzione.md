@@ -166,3 +166,20 @@ L'immagine viene quindi identificata nel seguente modo:
 ```
 192.168.56.112:5002/step5-docker:${BUILD_NUMBER}
 ```
+
+---
+
+## To do
+1. ~~Step1/Step2: verificare Podman installato-
+2. ~~Step2: correzione generazioni chiavi
+3. ~~Step2: containerfiles in roles 
+4. Parametrizzare tutto 
+5. Step3: volume container (volume registry)
+6. Step 5: no command!
+7. Step5: verifica del service e prendere decisioni nel caso non attivo
+8. When d/p nel main nel main
+
+## Changelog 
+1. Task: `Check if Podman is installed` (Step1/Step2)
+2. Playbook: `pre_tasks`, generazione delle chiavi prima di eseguire i roles 
+3. `roles/step2/files/Containerfile-rocky`, `roles/step2/files/Containerfile-ubuntu`

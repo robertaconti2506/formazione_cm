@@ -7,7 +7,7 @@ pipeline {
 		stage('Build image') {
 			steps {
 				sh '''
-					docker build -f roles/step5/files/Dockerfile -t 192.168.56.112:5002/step5-docker:${BUILD_NUMBER} . 
+					Dockerfile -t 192.168.56.112:5002/step5-docker:${BUILD_NUMBER} . 
 				'''
 			}
 		}

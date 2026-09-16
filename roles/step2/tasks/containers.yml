@@ -1,12 +1,12 @@
 ---
 - name: Copy Rocky Containerfile
   ansible.builtin.copy:
-    src: rocky/Containerfile
+    src: Containerfile-rocky
     dest: /tmp/Containerfile-rocky
 
 - name: Copy Ubuntu Containerfile
   ansible.builtin.copy:
-    src: ubuntu/Containerfile
+    src: Containerfile-ubuntu
     dest: /tmp/Containerfile-ubuntu
 
 - name: Copy SSH public key

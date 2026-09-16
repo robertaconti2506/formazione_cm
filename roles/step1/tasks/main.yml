@@ -3,4 +3,4 @@
   ansible.builtin.include_tasks: podman.yml
 
 - name: Registry 
-  ansible.builtin.include_tasks: registry_podman.yml
+  ansible.builtin.include_tasks: registry-podman.yml
