@@ -1,0 +1,22 @@
+---
+- name: Pull the registry image with Podman
+  containers.podman.podman_image:
+    name: docker.io/library/registry:2
+    state: present
+
+- name: Run a Registry container with Podman
+  containers.podman.podman_container:
+    name: "{{ registry_name_podman }}"
+    image: docker.io/library/registry:2
+    state: started
+    publish: "{{ registry_port_podman }}:{{ registry_container_port }}"
+    volume:
+      - "{{ registry_volume_name }}:/var/lib/registry"
+
+- name: Allow Registry port (Podman)
+  become: true 
+  ansible.posix.firewalld:
+   port: "{{ registry_port_podman }}/tcp"
+   permanent: true
+   state: enabled
+   immediate: true

@@ -8,14 +8,14 @@
   containers.podman.podman_container:
     name: registry
     image: docker.io/library/registry:2
-    publish: "5000:5000"
+    publish: "{{ registry_host_port }}:{{ registry_container_port }}"
     volume:
-      - registry_data:/var/lib/registry
+      - "{{ registry_volume_name }}:/var/lib/registry"
 
 - name: Allow Registry port
   become: true
   ansible.posix.firewalld:
-    port: 5000/tcp
+    port: "{{ registry_host_port }}/tcp"
     permanent: true
     state: enabled
     immediate: true

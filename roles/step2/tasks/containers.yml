@@ -17,40 +17,40 @@
 
 - name: Build Rocky image
   containers.podman.podman_image:
-    name: rocky-ssh
+    name: "{{ rocky_container_name }}"
     path: /tmp
     build:
       file: /tmp/Containerfile-rocky
 
 - name: Build Ubuntu image
   containers.podman.podman_image:
-    name: ubuntu-ssh
+    name: "{{ ubuntu_container_name }}"
     path: /tmp
     build:
       file: /tmp/Containerfile-ubuntu
 
 - name: Create container network
   containers.podman.podman_network:
-    name: container_network
+    name: "{{ container_network_name }}"
     state: present
 
 - name: Run Rocky container
   containers.podman.podman_container:
-    name: rocky-ssh
-    image: rocky-ssh
+    name: "{{ rocky_container_name }}"
+    image: "{{ rocky_container_name }}"
     state: started
     restart_policy: always
     network:
-      - container_network
+      - "{{ container_network_name }}"
     publish:
-      - "2221:22"
+      - "{{ rocky_host_ssh_port }}:22"
 
 - name: Run Ubuntu container
   containers.podman.podman_container:
-    name: ubuntu-ssh
-    image: ubuntu-ssh
+    name: "{{ ubuntu_container_name }}"
+    image: "{{ ubuntu_container_name }}"
     state: started
     restart_policy: always
-    network: container_network
+    network: "{{ container_network_name }}"
     publish:
-      - "2222:22"
+      - "{{ ubuntu_host_ssh_port }}:22"

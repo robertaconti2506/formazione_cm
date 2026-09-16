@@ -174,12 +174,18 @@ L'immagine viene quindi identificata nel seguente modo:
 2. Step2: correzione generazioni chiavi, far in modo che vengano generate direttamente sulla VM, tramite task ansible ✔
 3. Step2: containerfiles in roles (non in una directory della root) +  no sub-directories per Containerfile ✔
 4. Parametrizzare tutto ✔
-5. Step3: aggiungere un volume registry 
-6. Step3: far eseguire task solo quando è attivo Podman (o Docker) direttamente nel main 
+5. Step3: aggiungere un volume registry ✔
+6. Step3: far eseguire task solo quando è attivo Podman (o Docker) direttamente nel main ✔
 7. Step 5: rimuovere l'utilizzo del modulo ansible.builtin.command in favore di moduli nativi
-8. Step5: verifica del service e decidere come procedere se attivo o non
+8. Step5: verifica del service e decidere come procedere se attivo o non 
+9. Coerenza linguistica
 ## Changelog 
 1. Task: `Check if Podman is installed` (Step1/Step2)
 2. Playbook: `pre_tasks`, generazione delle chiavi prima di eseguire i roles 
 3. `roles/step2/files/Containerfile-rocky`, `roles/step2/files/Containerfile-ubuntu`
 4. In ogni `step`è presente un file `defaults/main.yml`
+5. Ho aggiunto `registry_data` come volume, in `roles/step3/tasks/registry-podman.yml`e `roles/step3/tasks/registry-docker.yml`
+6. Ho creato nuovi task in `roles/step3/tasks`(`container-docker.yml`, `container-podman.yml`, `registry-docker.yml`, `registry-podman.yml`)
+7. - Ho sostituito `ansible.builtin.command`con `ansible.builtin.get_url` in `roles/step5/tasks/docker.yml`
+8. Nel file `roles/step5/tasks/docker.yml`, dopo aver verificato lo stato di Docker tramite `ansible.builtin.service_facts`, il task prosegue normalmente se il servizio risulta `running`; in caso contrario, viene eseguito un task che effettua il `restart` del servizio Docker.
+9. Ho tradotto tutto in inglese

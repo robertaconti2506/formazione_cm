@@ -1,0 +1,56 @@
+- name: Build Rocky image with Docker
+  community.docker.docker_image:
+    name: "{{ rocky_container_name }}"
+    source: build
+    build:
+      path: /tmp/step3
+      dockerfile: Containerfile-rocky
+
+- name: Build Ubuntu image with Docker
+  community.docker.docker_image:
+    name: "{{ ubuntu_container_name }}"
+    source: build
+    build:
+      path: /tmp/step3
+      dockerfile: Containerfile-ubuntu
+
+- name: Tag and push Rocky image with Docker
+  community.docker.docker_image:
+    name: "{{ rocky_container_name }}"
+    repository: "{{ registry_host }}:{{ registry_port_docker }}/{{ rocky_container_name }}"
+    push: true
+    source: local
+
+- name: Tag and push Ubuntu image with Docker
+  community.docker.docker_image:
+    name: "{{ ubuntu_container_name }}"
+    repository: "{{ registry_host }}:{{ registry_port_docker }}/{{ ubuntu_container_name }}"
+    push: true
+    source: local
+
+- name: Create container network (Docker)
+  community.docker.docker_network:
+    name: "{{ container_network_name }}"
+    state: present
+
+- name: Run Rocky container with Docker
+  community.docker.docker_container: 
+    name: "{{ rocky_container_name }}"
+    image: "{{ rocky_container_name }}"
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ container_network_name }}"
+    published_ports:
+      - "{{ rocky_docker_host_port }}:22"
+
+- name: Run Ubuntu container with Docker
+  community.docker.docker_container:
+    name:  "{{ ubuntu_container_name }}"
+    image: "{{ ubuntu_container_name }}"
+    state: started
+    restart_policy: always
+    networks: 
+      - name: "{{ container_network_name }}"
+    published_ports:
+      - "{{ ubuntu_docker_host_port }}:22"

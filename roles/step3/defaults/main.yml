@@ -2,6 +2,9 @@
 rocky_container_name: rocky-ssh
 ubuntu_container_name: ubuntu-ssh
 
+rocky_host_ssh_port: 2221
+ubuntu_host_ssh_port: 2222
+
 rocky_podman_host_port: 2223
 rocky_docker_host_port: 2224
 ubuntu_podman_host_port: 2225
@@ -10,6 +13,11 @@ ubuntu_docker_host_port: 2226
 container_network_name: container_network
 
 registry_host: localhost
+registry_container_port: 5000
+registry_name_podman: registry_p
 registry_port_podman: 5001
+registry_name_docker: registry_d
 registry_port_docker: 5002
 image_tag: latest
+
+registry_volume_name: registry_data

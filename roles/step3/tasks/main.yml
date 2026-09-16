@@ -2,11 +2,25 @@
 - name: Runtime
   ansible.builtin.include_tasks: runtime.yml
 
-- name: Registry
-  ansible.builtin.include_tasks: registry-dp.yml
+- name: Registry Podman
+  ansible.builtin.include_tasks: registry-podman.yml
+  when: podman_installed
+
+- name: Registry Docker
+  ansible.builtin.include_tasks: registry-docker.yml
+  when: docker_installed
  
 - name: Firewall
   ansible.builtin.include_tasks: firewall.yml
 
-- name: Containers Docker/Podman
+- name: Containers
   ansible.builtin.include_tasks: containers-dp.yml
+
+- name: Containers Podman
+  ansible.builtin.include_tasks: container-podman.yml
+  when: podman_installed
+
+- name: Containers Docker
+  ansible.builtin.include_tasks: container-docker.yml
+  when: docker_installed
+

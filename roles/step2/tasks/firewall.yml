@@ -2,7 +2,7 @@
 - name: Allow SSH Rocky container
   become: true
   ansible.posix.firewalld:
-    port: 2221/tcp
+    port: "{{ rocky_host_ssh_port }}/tcp"
     permanent: true
     state: enabled
     immediate: true
@@ -10,7 +10,7 @@
 - name: Allow SSH Ubuntu container 
   become: true
   ansible.posix.firewalld:
-    port: 2222/tcp
+    port: "{{ ubuntu_host_ssh_port }}/tcp"
     permanent: true
     state: enabled
     immediate: true

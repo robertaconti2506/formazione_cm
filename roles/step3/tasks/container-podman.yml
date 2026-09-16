@@ -1,0 +1,57 @@
+- name: Build Rocky image with Podman
+  containers.podman.podman_image:
+    name: "{{ rocky_container_name }}"
+    path: /tmp/step3
+    build:
+      file: Containerfile-rocky
+
+- name: Build Ubuntu image with Podman
+  containers.podman.podman_image:
+    name: "{{ ubuntu_container_name }}"
+    path: /tmp/step3
+    build:
+      file: Containerfile-ubuntu
+
+- name: Tag and push Rocky image with Podman
+  containers.podman.podman_image:
+    name: "{{ rocky_container_name }}"
+    tag: "{{ image_tag }}"
+    push: true
+    validate_certs: false
+    push_args:
+      dest: "{{ registry_host }}:{{ registry_port_podman }}/{{ rocky_container_name }}"
+
+- name: Tag and push Ubuntu image with Podman
+  containers.podman.podman_image:
+    name: "{{ ubuntu_container_name }}"
+    tag: "{{ image_tag }}"
+    push: true
+    validate_certs: false
+    push_args:
+      dest: "{{ registry_host }}:{{ registry_port_podman }}/{{ ubuntu_container_name }}"
+
+- name: Create container network (Podman)
+  containers.podman.podman_network:
+    name: "{{ container_network_name }}"
+    state: present
+    
+- name: Run Rocky container with Podman
+  containers.podman.podman_container:
+    name: "{{ rocky_container_name }}"
+    image: "{{ rocky_container_name }}"
+    state: started
+    restart_policy: always
+    network:
+      - "{{ container_network_name }}"
+    publish:
+      - "{{ rocky_podman_host_port }}:22"
+
+- name: Run Ubuntu container with Podman
+  containers.podman.podman_container:
+    name: "{{ ubuntu_container_name }}"
+    image: "{{ ubuntu_container_name }}"
+    state: started
+    restart_policy: always
+    network: "{{ container_network_name }}"
+    publish:
+      - "{{ ubuntu_podman_host_port }}:22"

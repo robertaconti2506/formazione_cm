@@ -1,3 +1,5 @@
+registry_volume_name: registry_data
+
 container_name: step5-docker
 container_image: step5-docker
 container_tag: latest
@@ -7,5 +9,7 @@ container_container_port: 22
 
 container_network: step5-network
 
+registry_name_docker: registry_d
 registry_host: 192.168.56.112
 registry_port: 5002
+registry_container_port: 5000

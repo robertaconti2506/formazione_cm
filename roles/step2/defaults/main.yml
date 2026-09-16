@@ -1,0 +1,8 @@
+---
+rocky_container_name: rocky-ssh
+ubuntu_container_name: ubuntu-ssh
+
+rocky_host_ssh_port: 2221
+ubuntu_host_ssh_port: 2222
+
+container_network_name: container_network
