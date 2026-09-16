@@ -170,9 +170,9 @@ L'immagine viene quindi identificata nel seguente modo:
 ---
 
 ## To do
-1. ~~Step1/Step2: verificare Podman installato-
-2. ~~Step2: correzione generazioni chiavi
-3. ~~Step2: containerfiles in roles 
+1. ~~Step1/Step2: verificare Podman installato~~
+2. ~~Step2: correzione generazioni chiavi~~
+3. ~~Step2: containerfiles in roles~~
 4. Parametrizzare tutto 
 5. Step3: volume container (volume registry)
 6. Step 5: no command!
