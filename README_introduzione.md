@@ -176,9 +176,9 @@ L'immagine viene quindi identificata nel seguente modo:
 4. Parametrizzare tutto ✔
 5. Step3: aggiungere un volume registry ✔
 6. Step3: far eseguire task solo quando è attivo Podman (o Docker) direttamente nel main ✔
-7. Step 5: rimuovere l'utilizzo del modulo ansible.builtin.command in favore di moduli nativi
-8. Step5: verifica del service e decidere come procedere se attivo o non 
-9. Coerenza linguistica
+7. Step 5: rimuovere l'utilizzo del modulo ansible.builtin.command in favore di moduli nativi✔
+8. Step5: verifica del service e decidere come procedere se attivo o non ✔
+9. Coerenza linguistica ✔
 ## Changelog 
 1. Task: `Check if Podman is installed` (Step1/Step2)
 2. Playbook: `pre_tasks`, generazione delle chiavi prima di eseguire i roles 
