@@ -170,16 +170,16 @@ L'immagine viene quindi identificata nel seguente modo:
 ---
 
 ## To do
-1. ~~Step1/Step2: verificare Podman installato~~
-2. ~~Step2: correzione generazioni chiavi~~
-3. ~~Step2: containerfiles in roles~~
-4. Parametrizzare tutto 
-5. Step3: volume container (volume registry)
-6. Step 5: no command!
-7. Step5: verifica del service e prendere decisioni nel caso non attivo
-8. When d/p nel main nel main
-
+1. Step1/Step2: aggiungere un task che verifichi che Podman sia installato ✔
+2. Step2: correzione generazioni chiavi, far in modo che vengano generate direttamente sulla VM, tramite task ansible ✔
+3. Step2: containerfiles in roles (non in una directory della root) +  no sub-directories per Containerfile ✔
+4. Parametrizzare tutto ✔
+5. Step3: aggiungere un volume registry 
+6. Step3: far eseguire task solo quando è attivo Podman (o Docker) direttamente nel main 
+7. Step 5: rimuovere l'utilizzo del modulo ansible.builtin.command in favore di moduli nativi
+8. Step5: verifica del service e decidere come procedere se attivo o non
 ## Changelog 
 1. Task: `Check if Podman is installed` (Step1/Step2)
 2. Playbook: `pre_tasks`, generazione delle chiavi prima di eseguire i roles 
 3. `roles/step2/files/Containerfile-rocky`, `roles/step2/files/Containerfile-ubuntu`
+4. In ogni `step`è presente un file `defaults/main.yml`
