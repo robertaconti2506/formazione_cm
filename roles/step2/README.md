@@ -164,25 +164,21 @@ per Rocky e:
 ```
 per Ubuntu.
 
-Dalla macchina che possiede la chiave privata è possibile effettuare il collegamento ai due container:
+La chiave SSH viene generata dal playbook sulla VM Vagrant che funge da controller Ansible:
 ```
-ssh -i /percorso/della/chiave/id-genericuser -p 2221 genericuser@192.168.56.112
+/home/vagrant/.ssh/id-genericuser
+/home/vagrant/.ssh/id-genericuser.pub
 ```
-per il container Rocky e:
-```
-ssh -i /percorso/della/chiave/id-genericuser -p 2222 genericuser@192.168.56.112
-```
-per il container Ubuntu.
+La chiave privata rimane quindi sulla VM controller e viene utilizzata per consentire l'accesso dell'utente `genericuser` ai container.
+Se la configurazione è corretta, l'accesso SSH ai container avviene tramite la chiave configurata, senza richiesta della password dell'utente.
 
-Se la configurazione è corretta, l'accesso avviene tramite chiave SSH senza richiesta della password dell'utente.
-
-È possibile accedere direttamente ai container tramite Podman (dalla VM nodo Ansible):
+Per accedere direttamente ai container tramite Podman (dalla VM nodo Ansible):
 ```
 podman exec -it rocky-ssh /bin/bash
 podman exec -it ubuntu-ssh /bin/bash
 ```
 
-All'interno del container è possibile verificare il processo `sshd`:
+Per verificare il processo `sshd` all'interno del container:
 ```
 ps aux | grep sshd
 ```
@@ -195,9 +191,9 @@ Per verificare che la porta `22` sia in ascolto tramite:
 ```
 cat /proc/net/tcp
 ```
+
 La porta `22` viene rappresentata in formato esadecimale come:
 ```
 0016
 ```
 La presenza della porta `0016` associata a un socket nello stato `0A` indica che il processo è in ascolto sulla porta `22`.
-
