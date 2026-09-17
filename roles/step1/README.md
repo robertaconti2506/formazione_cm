@@ -1,4 +1,5 @@
  <h1 align="center">Step 1</h1>
+ 
 ## Descrizione
 Lo scopo di questo esercizio è configurare un ambiente con Podman e predisporre un Docker Registry privato locale.
 
