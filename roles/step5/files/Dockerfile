@@ -25,7 +25,7 @@ RUN mkdir -p /home/genericuser/.ssh && chmod 700 /home/genericuser/.ssh
 
 COPY id-genericuser.pub /home/genericuser/.ssh/authorized_keys
 
-COPY docker-entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY roles/step5/files/docker-entrypoint.sh /usr/local/bin/entrypoint.sh
 
 
 RUN chmod 600 /home/genericuser/.ssh/authorized_keys && chmod 700 /usr/local/bin/entrypoint.sh && \
